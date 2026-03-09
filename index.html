@@ -26,7 +26,7 @@
   <h1>Distribution of US Wage Earners by Net Compensation (2023)</h1>
   <p><a href="https://www.ssa.gov/cgi-bin/netcomp.cgi?year=2023" target="_blank" style="color:#aaa;">Source: SSA Public Data</a> &mdash; 2023 is the most recent data available as of March 2026</p>
   <p style="font-size:13px; color:#f39c12;">⚠ All figures reflect <strong>net compensation</strong> (take-home pay after taxes, Social Security, Medicare, and other deductions)</p>
-  <p style="font-size:15px;">Total wage earners: <strong style="color:#e94560">173,670,935</strong> &nbsp;|&nbsp; Mean wage: <strong style="color:#e94560">$63,933</strong> &nbsp;|&nbsp; Median wage: <strong style="color:#e94560">~$40-45K</strong></p>
+  <p style="font-size:15px;">Total wage earners: <strong style="color:#e94560">173,670,935</strong> &nbsp;|&nbsp; Mean wage: <strong style="color:#e94560">$63,933</strong> &nbsp;|&nbsp; Median wage: <strong style="color:#e94560">$43,263</strong></p>
   <div class="legend">
     <span><span class="dot" style="background:#3498db"></span> Below Median (bottom 50%)</span>
     <span><span class="dot" style="background:#2ecc71"></span> Median to Top 10%</span>
@@ -55,25 +55,25 @@
   <div style="margin-top:20px; background:#16213e; border-radius:8px; padding:20px 28px;">
     <h2 style="color:#e94560; margin:0 0 14px;">Key Takeaways</h2>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; font-size:14px; color:#ccc; line-height:1.6;">
-      <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #00cec9;">
-        <strong style="color:#00cec9;">Mean vs Median Gap</strong><br>
-        The mean wage ($63,933) is ~$20K higher than the median (~$42K). This gap exists because high earners pull the average up significantly — the distribution is not symmetric.
-      </div>
-      <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #aaa;">
-        <strong style="color:#aaa;">Not a Bell Curve</strong><br>
-        Unlike a normal distribution, wage data is right-skewed with a long tail. Most earners cluster at lower incomes while a small number earn dramatically more.
-      </div>
       <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #3498db;">
-        <strong style="color:#3498db;">Half of America Takes Home Under ~$42K</strong><br>
+        <strong style="color:#3498db;">Half of America Takes Home Under $43,263</strong><br>
         The median falls in the $40-45K bracket — 50% of all 173.7M wage earners take home less than this after taxes and deductions.
       </div>
       <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #2ecc71;">
         <strong style="color:#2ecc71;">Taking Home $100K Puts You in the Top 15%</strong><br>
         Only about 25.2M people out of 173.7M actually take home $100K+ after taxes and deductions.
       </div>
-      <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #3498db;">
-        <strong style="color:#3498db;">The $0-5K Bracket is the Largest</strong><br>
-        Nearly 16.8M earners (9.7% of all) took home under $5K — likely part-time, seasonal, or gig workers. That's roughly 1 in 10 wage earners.
+      <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #00cec9;">
+        <strong style="color:#00cec9;">Mean vs Median Gap</strong><br>
+        The mean wage ($63,933) is ~$20K higher than the median ($43,263). This gap exists because high earners pull the average up significantly — the distribution is not symmetric.
+      </div>
+      <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #f39c12;">
+        <strong style="color:#f39c12;">The Top 10-5% Sweet Spot</strong><br>
+        About 8.5M earners take home between $125K and $175K. Crossing into this zone means out-earning roughly 9 out of 10 American workers.
+      </div>
+      <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #9b59b6;">
+        <strong style="color:#9b59b6;">The Steep Climb</strong><br>
+        Going from top 10% ($125K) to top 5% ($175K) is a $50K jump. But going from top 5% to top 1% requires doubling your take-home to $350K — the higher you go, the steeper it gets.
       </div>
       <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #e74c3c;">
         <strong style="color:#e74c3c;">The Top 1% Starts at ~$350K</strong><br>
@@ -196,7 +196,7 @@ new Chart(document.getElementById('chart'), {
       annotation:{
         annotations:{
           mean:   ann(meanIdx,'Mean (~$63,933)','#00cec9'),
-          median: ann(median,'Median (~$40-45K)','#2ecc71'),
+          median: ann(median,'Median ($43,263)','#2ecc71'),
           top10:  ann(top10,'Top 10% (~$125K+)','#f39c12'),
           top5:   ann(top5,'Top 5% (~$175K+)','#9b59b6'),
           top1:   ann(top1,'Top 1% (~$350K+)','#e74c3c')
