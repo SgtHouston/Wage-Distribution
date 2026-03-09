@@ -126,7 +126,7 @@ const median=8, top10=25, top5=35, top1=43, meanIdx=12;
 const ann = (x, label, color, xAdj) => ({
   type:'line', xMin:x, xMax:x, yScaleID:'y',
   borderColor:color, borderWidth:2, borderDash:[6,4],
-  label:{ display:true, content:label, position:'start',
+  label:{ display:true, content:label, position:'end',
     backgroundColor:color, color:'#fff', font:{size:11,weight:'bold'},
     padding:4, borderRadius:3, xAdjust: xAdj||0, rotation:-90 }
 });
