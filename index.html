@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html><head>
+<title>US Wage Distribution</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1"></script>
+<style>
+  body { font-family: Arial, sans-serif; background: #1a1a2e; color: #eee; display: flex; justify-content: center; padding: 20px; }
+  .container { max-width: 1200px; width: 100%; }
+  h1 { text-align: center; color: #e94560; }
+  p { text-align: center; color: #aaa; font-size: 14px; }
+  canvas { background: #16213e; border-radius: 8px; padding: 10px; }
+  .legend { display: flex; justify-content: center; gap: 24px; margin: 12px 0; flex-wrap: wrap; }
+  .legend span { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #ccc; }
+  .legend .dot { width: 14px; height: 14px; border-radius: 3px; display: inline-block; }
+  #dl { display:block; margin:12px auto 0; padding:8px 20px; background:#e94560; color:#fff; border:none; border-radius:5px; cursor:pointer; font-size:14px; }
+  #dl:hover { background:#c0392b; }
+  .calc { background:#16213e; border-radius:8px; padding:18px 24px; margin-bottom:16px; text-align:center; }
+  .calc input, .calc select { background:#1a1a2e; color:#eee; border:1px solid #444; border-radius:5px; padding:8px 12px; font-size:16px; margin:0 4px; }
+  .calc button { background:#e94560; color:#fff; border:none; border-radius:5px; padding:8px 18px; font-size:15px; cursor:pointer; margin-left:6px; }
+  .calc button:hover { background:#c0392b; }
+  #result { margin-top:12px; font-size:16px; color:#eee; min-height:24px; }
+</style>
+</head><body>
+<div class="container">
+  <h1>Distribution of US Wage Earners by Net Compensation (2023)</h1>
+  <p>Source: SSA Public Data &mdash; 2023 is the most recent data available as of March 2026</p>
+  <p style="font-size:13px; color:#f39c12;">⚠ All figures reflect <strong>net compensation</strong> (take-home pay after taxes, Social Security, Medicare, and other deductions)</p>
+  <p style="font-size:15px;">Total wage earners: <strong style="color:#e94560">173,670,935</strong> &nbsp;|&nbsp; Mean wage: <strong style="color:#e94560">$63,933</strong> &nbsp;|&nbsp; Median wage: <strong style="color:#e94560">~$40-45K</strong></p>
+  <div class="legend">
+    <span><span class="dot" style="background:#3498db"></span> Below Median (bottom 50%)</span>
+    <span><span class="dot" style="background:#2ecc71"></span> Median to Top 10%</span>
+    <span><span class="dot" style="background:#f39c12"></span> Top 10% to Top 5%</span>
+    <span><span class="dot" style="background:#9b59b6"></span> Top 5% to Top 1%</span>
+    <span><span class="dot" style="background:#e74c3c"></span> Top 1%</span>
+  </div>
+  <div class="calc">
+    <strong style="color:#e94560;">Where Do You Fall?</strong><br>
+    <span style="font-size:13px; color:#aaa;">Enter your take-home pay (the amount deposited to your bank after all deductions)</span>
+    <div style="margin-top:10px;">
+      $ <input id="wage" type="number" placeholder="Enter amount" style="width:140px;">
+      <select id="period">
+        <option value="1">per year</option>
+        <option value="12">per month</option>
+        <option value="26">per 2 weeks</option>
+        <option value="52">per week</option>
+        <option value="2080">per hour</option>
+      </select>
+      <button onclick="calcWage()">Find My Spot</button>
+    </div>
+    <div style="font-size:11px; color:#666; margin-top:6px;">Not sure? Check your most recent pay stub or bank deposit.</div>
+    <div id="result"></div>
+  </div>
+  <canvas id="chart"></canvas>
+  <div style="margin-top:20px; background:#16213e; border-radius:8px; padding:20px 28px;">
+    <h2 style="color:#e94560; margin:0 0 14px;">Key Takeaways</h2>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; font-size:14px; color:#ccc; line-height:1.6;">
+      <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #00cec9;">
+        <strong style="color:#00cec9;">Mean vs Median Gap</strong><br>
+        The mean wage ($63,933) is ~$20K higher than the median (~$42K). This gap exists because high earners pull the average up significantly — the distribution is not symmetric.
+      </div>
+      <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #aaa;">
+        <strong style="color:#aaa;">Not a Bell Curve</strong><br>
+        Unlike a normal distribution, wage data is right-skewed with a long tail. Most earners cluster at lower incomes while a small number earn dramatically more.
+      </div>
+      <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #3498db;">
+        <strong style="color:#3498db;">Half of America Takes Home Under ~$42K</strong><br>
+        The median falls in the $40-45K bracket — 50% of all 173.7M wage earners take home less than this after taxes and deductions.
+      </div>
+      <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #2ecc71;">
+        <strong style="color:#2ecc71;">Taking Home $100K Puts You in the Top 15%</strong><br>
+        Only about 25.2M people out of 173.7M actually take home $100K+ after taxes and deductions.
+      </div>
+      <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #3498db;">
+        <strong style="color:#3498db;">The $0-5K Bracket is the Largest</strong><br>
+        Nearly 16.8M earners (9.7% of all) took home under $5K — likely part-time, seasonal, or gig workers. That's roughly 1 in 10 wage earners.
+      </div>
+      <div style="background:#1a1a2e; padding:14px; border-radius:6px; border-left:3px solid #e74c3c;">
+        <strong style="color:#e74c3c;">The Top 1% Starts at ~$350K</strong><br>
+        Only ~1.6M people earn $350K+. The 293 earners making $50M+ averaged $98.9M each — more than 2,300x the median wage.
+      </div>
+    </div>
+  </div>
+  <button id="dl">Download as PNG</button>
+</div>
+<script>
+document.getElementById('dl').onclick = function() {
+  html2canvas(document.querySelector('.container'), {backgroundColor:'#1a1a2e', scale:2}).then(c => {
+    const a = document.createElement('a');
+    a.href = c.toDataURL('image/png');
+    a.download = 'wage_distribution_2023.png';
+    a.click();
+  });
+};
+const data = [
+  ["$0-5K",16795991,9.67],["$5-10K",10763153,15.87],["$10-15K",9341697,21.25],
+  ["$15-20K",8666892,26.24],["$20-25K",8391307,31.07],["$25-30K",8545668,35.99],
+  ["$30-35K",9183063,41.28],["$35-40K",9329327,46.65],["$40-45K",8915491,51.78],
+  ["$45-50K",8236191,56.53],["$50-55K",7596831,60.90],["$55-60K",6747264,64.79],
+  ["$60-65K",6163404,68.33],["$65-70K",5448425,71.47],["$70-75K",4852301,74.27],
+  ["$75-80K",4329986,76.76],["$80-85K",3809027,78.95],["$85-90K",3347051,80.88],
+  ["$90-95K",2978806,82.59],["$95-100K",2641150,84.11],["$100-105K",2360600,85.47],
+  ["$105-110K",2056777,86.66],["$110-115K",1837935,87.72],["$115-120K",1654412,88.67],
+  ["$120-125K",1518478,89.54],["$125-130K",1345280,90.32],["$130-135K",1233951,91.03],
+  ["$135-140K",1105523,91.67],["$140-145K",1008576,92.25],["$145-150K",919627,92.78],
+  ["$150-155K",842308,93.26],["$155-160K",758770,93.70],["$160-165K",695139,94.10],
+  ["$165-170K",629355,94.46],["$170-175K",582348,94.80],["$175-180K",536371,95.10],
+  ["$180-185K",495005,95.39],["$185-190K",439636,95.64],["$190-195K",401012,95.87],
+  ["$195-200K",373317,96.09],["$200-250K",2519066,97.54],["$250-300K",1333553,98.31],
+  ["$300-350K",811046,98.77],["$350-400K",524435,99.08],["$400-450K",358261,99.28],
+  ["$450-500K",253122,99.43],["$500K-1M",760799,99.87],["$1-1.5M",122408,99.94],
+  ["$1.5-2M",43143,99.96],["$2-2.5M",20654,99.97],["$2.5-3M",11879,99.98],
+  ["$3-3.5M",7562,99.98],["$3.5-4M",5192,99.99],["$4-4.5M",3837,99.99],
+  ["$4.5-5M",2766,99.99],["$5-10M",10555,100.00],["$10-20M",3610,100.00],
+  ["$20-50M",1309,100.00],["$50M+",293,100.00]
+];
+
+const zoneColor = cum =>
+  cum < 50 ? 'rgba(52,152,219,0.85)' :
+  cum < 90 ? 'rgba(46,204,113,0.85)' :
+  cum < 95 ? 'rgba(243,156,18,0.85)' :
+  cum < 99 ? 'rgba(155,89,182,0.85)' :
+             'rgba(231,76,60,0.85)';
+
+const median=8, top10=25, top5=35, top1=43, meanIdx=12;
+const ann = (x, label, color, xAdj) => ({
+  type:'line', xMin:x, xMax:x, yScaleID:'y',
+  borderColor:color, borderWidth:2, borderDash:[6,4],
+  label:{ display:true, content:label, position:'start',
+    backgroundColor:color, color:'#fff', font:{size:11,weight:'bold'},
+    padding:4, borderRadius:3, xAdjust: xAdj||0, rotation:-90 }
+});
+
+const crosshair = {
+  id:'crosshair',
+  afterDraw(chart) {
+    if (chart.tooltip?._active?.length) {
+      const x = chart.tooltip._active[0].element.x;
+      const ctx = chart.ctx;
+      const {top,bottom} = chart.chartArea;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x, top);
+      ctx.lineTo(x, bottom);
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+      ctx.setLineDash([4,3]);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+};
+
+new Chart(document.getElementById('chart'), {
+  type:'bar',
+  plugins:[crosshair],
+  data:{
+    labels: data.map(d=>d[0]),
+    datasets:[{
+      label:'Wage Earners',
+      data: data.map(d=>d[1]),
+      backgroundColor: data.map(d=>zoneColor(d[2])),
+      borderColor:'rgba(255,255,255,0.15)',
+      borderWidth:1,
+      yAxisID:'y'
+    },{
+      label:'% of earners at or below',
+      data: data.map(d=>d[2]),
+      type:'line',
+      borderColor:'#e94560',
+      borderWidth:2.5,
+      pointRadius:2,
+      pointBackgroundColor:'#e94560',
+      fill:false, tension:0.3,
+      yAxisID:'y1'
+    }]
+  },
+  options:{
+    responsive:true,
+    interaction:{ mode:'index', intersect:false },
+    plugins:{
+      legend:{ display:false },
+      tooltip:{
+        callbacks:{
+          label: ctx => {
+            if (ctx.dataset.yAxisID==='y1') {
+              const pct = ctx.parsed.y;
+              return pct.toFixed(2)+'% earn this or less (top '+(100-pct).toFixed(2)+'%)';
+            }
+            const count = ctx.parsed.y;
+            const pctTotal = (count/173670935*100).toFixed(2);
+            return count.toLocaleString()+' earners ('+pctTotal+'% of all)';
+          }
+        }
+      },
+      annotation:{
+        annotations:{
+          mean:   ann(meanIdx,'Mean (~$63,933)','#00cec9'),
+          median: ann(median,'Median (~$40-45K)','#2ecc71'),
+          top10:  ann(top10,'Top 10% (~$125K+)','#f39c12'),
+          top5:   ann(top5,'Top 5% (~$175K+)','#9b59b6'),
+          top1:   ann(top1,'Top 1% (~$350K+)','#e74c3c')
+        }
+      }
+    },
+    scales:{
+      x:{ ticks:{color:'#aaa',maxRotation:90,minRotation:45,font:{size:9}}, grid:{color:'rgba(255,255,255,0.05)'} },
+      y:{ position:'left', ticks:{color:'#aaa',callback:v=>(v/1e6).toFixed(0)+'M'}, grid:{color:'rgba(255,255,255,0.08)'}, title:{display:true,text:'Number of Wage Earners',color:'#aaa'} },
+      y1:{ position:'right', min:0, max:100, ticks:{color:'#e94560',callback:v=>v+'%'}, grid:{drawOnChartArea:false}, title:{display:true,text:'% of Earners at or Below',color:'#e94560'} }
+    }
+  }
+});
+
+const brackets = [
+  [0,5000],    [5000,10000],  [10000,15000], [15000,20000], [20000,25000],
+  [25000,30000],[30000,35000],[35000,40000], [40000,45000], [45000,50000],
+  [50000,55000],[55000,60000],[60000,65000], [65000,70000], [70000,75000],
+  [75000,80000],[80000,85000],[85000,90000], [90000,95000], [95000,100000],
+  [100000,105000],[105000,110000],[110000,115000],[115000,120000],[120000,125000],
+  [125000,130000],[130000,135000],[135000,140000],[140000,145000],[145000,150000],
+  [150000,155000],[155000,160000],[160000,165000],[165000,170000],[170000,175000],
+  [175000,180000],[180000,185000],[185000,190000],[190000,195000],[195000,200000],
+  [200000,250000],[250000,300000],[300000,350000],[350000,400000],[400000,450000],
+  [450000,500000],[500000,1000000],[1000000,1500000],[1500000,2000000],[2000000,2500000],
+  [2500000,3000000],[3000000,3500000],[3500000,4000000],[4000000,4500000],[4500000,5000000],
+  [5000000,10000000],[10000000,20000000],[20000000,50000000],[50000000,Infinity]
+];
+
+function calcWage() {
+  const amt = parseFloat(document.getElementById('wage').value);
+  const mult = parseInt(document.getElementById('period').value);
+  const res = document.getElementById('result');
+  if (!amt || amt <= 0) { res.innerHTML = 'Please enter a valid amount.'; return; }
+  const annual = amt * mult;
+  const idx = brackets.findIndex(b => annual >= b[0] && annual < b[1]);
+  if (idx === -1) { res.innerHTML = 'Value out of range.'; return; }
+  const pct = data[idx][2];
+  const top = (100 - pct).toFixed(2);
+  const fmt = annual.toLocaleString('en-US', {style:'currency', currency:'USD', maximumFractionDigits:0});
+  res.innerHTML = 'At <strong style="color:#e94560;">' + fmt + '/year</strong> net take-home, you fall in the <strong style="color:#e94560;">' + data[idx][0] + '</strong> bracket. ' +
+    '<strong style="color:#2ecc71;">' + pct.toFixed(2) + '%</strong> of earners take home less than this — you\'re in the <strong style="color:#f39c12;">top ' + top + '%</strong>.';
+}
+</script>
+</body></html>
