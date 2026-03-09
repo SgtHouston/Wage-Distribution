@@ -237,8 +237,9 @@ function calcWage() {
   const pct = data[idx][2];
   const top = (100 - pct).toFixed(2);
   const fmt = annual.toLocaleString('en-US', {style:'currency', currency:'USD', maximumFractionDigits:0});
-  res.innerHTML = 'At <strong style="color:#e94560;">' + fmt + '/year</strong> net take-home, you fall in the <strong style="color:#e94560;">' + data[idx][0] + '</strong> bracket. ' +
-    '<strong style="color:#2ecc71;">' + pct.toFixed(2) + '%</strong> of earners take home less than this — you\'re in the <strong style="color:#f39c12;">top ' + top + '%</strong>.';
+  const zc = pct<50?'#3498db':pct<90?'#2ecc71':pct<95?'#f39c12':pct<99?'#9b59b6':'#e74c3c';
+  res.innerHTML = 'At <strong style="color:'+zc+'">'+fmt+'/year</strong> net take-home, you fall in the <strong style="color:'+zc+'">'+data[idx][0]+'</strong> bracket. ' +
+    '<strong style="color:'+zc+'">'+pct.toFixed(2)+'%</strong> of earners take home less than this — you\'re in the <strong style="color:'+zc+'">top '+top+'%</strong>.';
 }
 </script>
 </body></html>
